@@ -13,6 +13,22 @@ export default function App() {
     setNewItem("");
   }
 
+  function toggleTodo(id, completed){
+    setTodos(currentTodos => {
+      return currentTodos.map(todo => {
+        if(id === todo.id){
+          return {...todo, completed};
+        }
+        return todo;
+      })
+    })
+  }
+
+  function deleteTodo(id){
+    setTodos(currentTodos => {
+      return currentTodos.filter(todo => id !== todo.id)
+    })
+  }
 
   return (
     <>
@@ -25,15 +41,16 @@ export default function App() {
       </form>
       <h1 className="header">Todo List</h1>
       <ul className="list">
+        {todos.length === 0 && "No Todos"}
         {
-          todos.map((item) => {
+          todos.map((todo) => {
             return (
-              <li>
+              <li key={todo.id}>
                 <label>
-                  <input type="checkbox"/>
-                  { item.title }
+                  <input type="checkbox" onChange={e => toggleTodo(todo.id, e.target.checked)} checked={todo.completed}/>
+                  { todo.title }
                 </label>
-                <button className="btn btn-danger">Delete</button>
+                <button className="btn btn-danger" onClick={() => deleteTodo(todo.id)}>Delete</button>
               </li>
             );
           })
